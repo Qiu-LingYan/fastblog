@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记一次网站404 Not Found - 记一次网站404 Not Found - QiuLingYan博客站</title>
+    <meta name="description" content="记录一次网站出现 404 错误的排查过程及原因分析">
+    <meta name="keywords" content="AI, 编程, 技术博客, Python, 机器学习">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="记一次网站404 Not Found - QiuLingYan博客站">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/prism.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="https://qiu-lingyan.github.io/fastblog" class="brand-link">
+                    <i class="fas fa-robot"></i>
+                    <span>QiuLingYan</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="https://qiu-lingyan.github.io/fastblog" class="nav-link">首页</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        
+<!-- 文章头部 -->
+<header class="post-header">
+    <div class="container">
+        <!-- 若 post.html 中存在指向其他文章的链接，更新为根目录路径 -->
+        <!-- 示例：更新面包屑导航等可能存在的链接 -->
+            <nav class="breadcrumb">
+                <a href="https://qiu-lingyan.github.io/fastblog">首页</a>
+                <span>/</span>
+                <span>记一次网站404 Not Found</span>
+            </nav>
+        
+        <h1 class="post-title-large">记一次网站404 Not Found</h1>
+        
+        <div class="post-meta-large">
+            <div class="meta-item">
+                <i class="far fa-calendar"></i>
+                <time>2025-08-19</time>
+            </div>
+            <div class="meta-item">
+                <i class="far fa-user"></i>
+                <span>QiuLingYan</span>
+            </div>
+            <div class="meta-item">
+                <i class="far fa-clock"></i>
+                <span id="reading-time">计算中...</span>
+            </div>
+        </div>
+        
+        
+        <div class="post-tags-large">
+            
+            <span class="tag-large">Openresty</span>
+            
+            <span class="tag-large">Cloudflare</span>
+            
+            <span class="tag-large">SSL/TLS</span>
+            
+        </div>
+        
+    </div>
+</header>
+
+<!-- 文章内容 -->
+<article class="post-content">
+    <div class="container">
+        <div class="post-body">
+            <h2 id="404-not-found">记一次网站404 Not Found</h2>
+<h3 id="_1">省流时间线</h3>
+<ul>
+<li>2025.7.18：网站开始大面积404（其实是全面积404）</li>
+<li>2025.7.21 - 2025.8.5：罢工（其实是去旅游）</li>
+<li>2025.8.6：开始排查问题，修改Openresty的404页面，初步确认是服务器Openresty问题（此处是误导下列操作的罪魁祸首）</li>
+<li>开始逐步排查Openresty的配置文件，禁用了配置文件00.default.conf出现域名与期望站点不对应的情况（即访问主页结果发现是探针）</li>
+<li>2025.8.7：最终发现是Cloudflare的SSL/TLS的加密策略设置成完全导致的</li>
+</ul>
+<h3 id="_2">鸣谢</h3>
+<p>本次故障感谢MrZhang365的协助解决，以及他在故障解决中的决定性作用。</p>
+<h3 id="_3">故障分析</h3>
+<ol>
+<li><strong>00.default.conf问题</strong>：在配置文件中具有最高级别以及它的错误配置</li>
+<li><strong>Cloudflare的SSL/TLS配置问题</strong>：因为Cloudflare的SSL默认是开启完全加密模式（端到端加密），导致Cloudflare与服务器的连接开启了SSL/TLS加密从而无法正确获取内容。</li>
+</ol>
+<h3 id="_4">总结</h3>
+<p>以后注意着点Cloudflare的SSL配置，总是会有意外的惊喜。</p>
+        </div>
+        
+        <!-- 文章导航 -->
+        <nav class="post-navigation">
+            <a href="https://qiu-lingyan.github.io/fastblog" class="nav-back">
+                <i class="fas fa-arrow-left"></i>
+                返回首页
+            </a>
+            <button class="scroll-top" onclick="scrollToTop()">
+                <i class="fas fa-chevron-up"></i>
+            </button>
+        </nav>
+    </div>
+</article>
+
+<!-- 文章底部 -->
+<section class="post-footer">
+    <div class="container">
+        <div class="footer-card">
+            <h3>觉得文章有帮助？</h3>
+            <p>分享给更多需要的人</p>
+            <div class="share-buttons">
+                <a href="#" class="share-btn twitter" onclick="shareToTwitter()">
+                    <i class="fab fa-twitter"></i>
+                    Twitter
+                </a>
+                <a href="#" class="share-btn linkedin" onclick="shareToLinkedIn()">
+                    <i class="fab fa-linkedin"></i>
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// 计算阅读时间
+document.addEventListener('DOMContentLoaded', function() {
+    const content = document.querySelector('.post-body');
+    const text = content.textContent;
+    const wordCount = text.trim().split(/\s+/).length;
+    const readingTime = Math.ceil(wordCount / 200);
+    document.getElementById('reading-time').textContent = readingTime + ' 分钟阅读';
+});
+
+// 分享功能
+function shareToTwitter() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('记一次网站404 Not Found');
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+}
+
+function shareToLinkedIn() {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+}
+
+// 滚动到顶部
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// 代码块复制功能
+document.addEventListener('DOMContentLoaded', function() {
+    const codeBlocks = document.querySelectorAll('.highlight');
+    codeBlocks.forEach(block => {
+        const button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.innerHTML = '<i class="far fa-copy"></i>';
+        button.onclick = () => {
+            const code = block.textContent;
+            navigator.clipboard.writeText(code);
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                button.innerHTML = '<i class="far fa-copy"></i>';
+            }, 2000);
+        };
+        block.appendChild(button);
+    });
+});
+</script>
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content" style="text-align: center;">
+            <p>&copy; 2025 QiuLingYan 版权所有. 使用 ❤️ 构建 | ❤️Ling_Jin</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="static/js/main.js"></script>
+    <script src="static/js/prism.js"></script>
+</body>
+</html>

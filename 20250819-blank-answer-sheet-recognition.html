@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简述空白答题卡识别并自动打0分 - 简述空白答题卡识别并自动打0分 - QiuLingYan博客站</title>
+    <meta name="description" content="简述如何自动识别空白答题卡并自动打0分的实现方案">
+    <meta name="keywords" content="AI, 编程, 技术博客, Python, 机器学习">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="简述空白答题卡识别并自动打0分 - QiuLingYan博客站">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/prism.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="https://qiu-lingyan.github.io/fastblog" class="brand-link">
+                    <i class="fas fa-robot"></i>
+                    <span>QiuLingYan</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="https://qiu-lingyan.github.io/fastblog" class="nav-link">首页</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        
+<!-- 文章头部 -->
+<header class="post-header">
+    <div class="container">
+        <!-- 若 post.html 中存在指向其他文章的链接，更新为根目录路径 -->
+        <!-- 示例：更新面包屑导航等可能存在的链接 -->
+            <nav class="breadcrumb">
+                <a href="https://qiu-lingyan.github.io/fastblog">首页</a>
+                <span>/</span>
+                <span>简述空白答题卡识别并自动打0分</span>
+            </nav>
+        
+        <h1 class="post-title-large">简述空白答题卡识别并自动打0分</h1>
+        
+        <div class="post-meta-large">
+            <div class="meta-item">
+                <i class="far fa-calendar"></i>
+                <time>2025-08-19</time>
+            </div>
+            <div class="meta-item">
+                <i class="far fa-user"></i>
+                <span>QiuLingYan</span>
+            </div>
+            <div class="meta-item">
+                <i class="far fa-clock"></i>
+                <span id="reading-time">计算中...</span>
+            </div>
+        </div>
+        
+        
+        <div class="post-tags-large">
+            
+            <span class="tag-large">Python</span>
+            
+            <span class="tag-large">答题卡识别</span>
+            
+            <span class="tag-large">OpenCV</span>
+            
+        </div>
+        
+    </div>
+</header>
+
+<!-- 文章内容 -->
+<article class="post-content">
+    <div class="container">
+        <div class="post-body">
+            <h2 id="0">简述空白答题卡识别并自动打0分</h2>
+<p>本栏目由 Rainyun.com 雨云 赞助播出。前因简短版：帮妈妈改答题卡。详细版：我快步走到书房，打开笔记本电脑，屏幕的蓝光映在脸上。对着空白的答题卡，我陷入了沉思，开始思考：如何自动批改空白卷？</p>
+<h3 id="_1">过程环境</h3>
+<p>本项目采用Python作为编程环境。依赖库如下：
+- cv2 (OpenCV): 用于图像处理
+- numpy: 数值计算
+- pyautogui: 屏幕截图和鼠标操作
+- time: 时间控制
+- winsound: 发出提示音
+- keyboard: 检测键盘输入
+- json: 读取配置文件</p>
+<h3 id="_2">项目文件</h3>
+<ul>
+<li>main.py（主文件）</li>
+<li>config.json </li>
+<li>监控区域(SCREEN_REGION)</li>
+<li>点击位置(CLICK_POSITION)</li>
+<li>空白阈值(BLANK_THRESHOLD)</li>
+</ul>
+<h3 id="mainpy">主程序（main.py）主要函数</h3>
+<h4 id="_3">配置读取</h4>
+<p>从config.json文件中读取配置参数并转换为Python变量。</p>
+<h4 id="is_blank_screen">is_blank_screen函数</h4>
+<ul>
+<li>功能：判断指定屏幕区域是否为空白</li>
+<li>处理流程：</li>
+<li>使用pyautogui截取指定区域</li>
+<li>将图像转换为OpenCV格式(BGR)</li>
+<li>转换为灰度图并应用高斯模糊减少噪声</li>
+<li>使用自适应阈值处理将图像二值化</li>
+<li>计算非零像素比例并与阈值比较</li>
+</ul>
+<h4 id="monitor_screen">monitor_screen函数</h4>
+<ol>
+<li>主监控循环</li>
+<li>每隔CHECK_INTERVAL秒检查一次屏幕区域</li>
+<li>如果检测到空白：</li>
+<li>打印提示信息</li>
+<li>发出2000Hz、持续500ms的提示音</li>
+<li>在CLICK_POSITION位置模拟鼠标点击</li>
+</ol>
+<h3 id="_4">退出方式</h3>
+<p>按下Ctrl+Q组合键或使用Ctrl+C中断程序（经实测，Ctrl+C无法退出运行，慎用）。</p>
+<h3 id="_5">工作原理</h3>
+<p>程序持续监控屏幕上的一个特定区域(由SCREEN_REGION定义)，通过图像处理技术分析该区域内容。当该区域的"空白程度"超过设定的阈值(BLANK_THRESHOLD)时，判定为空白屏幕，在预设位置(CLICK_POSITION)执行点击操作，同时发出声音提示。检查间隔为0.2秒(可配置)，确保及时响应（注：经本人测试，检查间隔为0.1或0.2s时反应最稳定，不会出现反应过快导致重复点击0分的后果）。</p>
+<h3 id="configjson">配置文件（config.json）</h3>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;SCREEN_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">x</span><span class="p">,</span><span class="w"> </span><span class="err">y</span><span class="p">,</span><span class="w"> </span><span class="err">wid</span><span class="kc">t</span><span class="err">h</span><span class="p">,</span><span class="w"> </span><span class="err">heigh</span><span class="kc">t</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;BLANK_THRESHOLD&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.99</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;CLICK_POSITION&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">x</span><span class="p">,</span><span class="w"> </span><span class="err">y</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;CHECK_INTERVAL&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_6">参数说明</h3>
+<ul>
+<li>SCREEN_REGION: 定义了屏幕监控区域的坐标和大小，格式为[x, y, width, height]</li>
+<li>x: 区域左上角的X坐标(x像素)</li>
+<li>y: 区域左上角的Y坐标(y像素)</li>
+<li>width: 区域宽度(width像素)</li>
+<li>height: 区域高度(height像素)</li>
+<li>BLANK_THRESHOLD: 空白阈值(0.99)，用于判断屏幕区域是否为空白。值越高，对"空白"的判断越严格。</li>
+<li>CLICK_POSITION: 当检测到空白时自动点击的位置坐标[x, y]</li>
+<li>x: 点击位置的X坐标(x像素)</li>
+<li>y: 点击位置的Y坐标(y像素)</li>
+<li>CHECK_INTERVAL: 检查间隔时间(0.2秒)，即程序每隔0.2秒检查一次屏幕区域。</li>
+</ul>
+<h3 id="_7">注意事项</h3>
+<ul>
+<li>使用前需要根据实际屏幕分辨率调整区域坐标和点击位置</li>
+<li>空白阈值可能需要根据具体应用场景调整</li>
+<li>程序运行时需要保持监控区域可见</li>
+<li>使用Ctrl+Q可以安全退出程序</li>
+</ul>
+<p>由于某些原因，主程序暂无法公开。如有需要，请联系本人。Email: hiyo-qly@foxmail.com</p>
+        </div>
+        
+        <!-- 文章导航 -->
+        <nav class="post-navigation">
+            <a href="https://qiu-lingyan.github.io/fastblog" class="nav-back">
+                <i class="fas fa-arrow-left"></i>
+                返回首页
+            </a>
+            <button class="scroll-top" onclick="scrollToTop()">
+                <i class="fas fa-chevron-up"></i>
+            </button>
+        </nav>
+    </div>
+</article>
+
+<!-- 文章底部 -->
+<section class="post-footer">
+    <div class="container">
+        <div class="footer-card">
+            <h3>觉得文章有帮助？</h3>
+            <p>分享给更多需要的人</p>
+            <div class="share-buttons">
+                <a href="#" class="share-btn twitter" onclick="shareToTwitter()">
+                    <i class="fab fa-twitter"></i>
+                    Twitter
+                </a>
+                <a href="#" class="share-btn linkedin" onclick="shareToLinkedIn()">
+                    <i class="fab fa-linkedin"></i>
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// 计算阅读时间
+document.addEventListener('DOMContentLoaded', function() {
+    const content = document.querySelector('.post-body');
+    const text = content.textContent;
+    const wordCount = text.trim().split(/\s+/).length;
+    const readingTime = Math.ceil(wordCount / 200);
+    document.getElementById('reading-time').textContent = readingTime + ' 分钟阅读';
+});
+
+// 分享功能
+function shareToTwitter() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('简述空白答题卡识别并自动打0分');
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+}
+
+function shareToLinkedIn() {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+}
+
+// 滚动到顶部
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// 代码块复制功能
+document.addEventListener('DOMContentLoaded', function() {
+    const codeBlocks = document.querySelectorAll('.highlight');
+    codeBlocks.forEach(block => {
+        const button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.innerHTML = '<i class="far fa-copy"></i>';
+        button.onclick = () => {
+            const code = block.textContent;
+            navigator.clipboard.writeText(code);
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                button.innerHTML = '<i class="far fa-copy"></i>';
+            }, 2000);
+        };
+        block.appendChild(button);
+    });
+});
+</script>
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content" style="text-align: center;">
+            <p>&copy; 2025 QiuLingYan 版权所有. 使用 ❤️ 构建 | ❤️Ling_Jin</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="static/js/main.js"></script>
+    <script src="static/js/prism.js"></script>
+</body>
+</html>
